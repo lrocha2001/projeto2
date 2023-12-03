@@ -28,15 +28,15 @@ const FormLogin = styled.form`
     }
 `
 
-function Form() {
+function Form(props) {
     return(
         <FormContainer>
-            <FormLogin>
-                <label htmlFor="user">User</label>
-                <input type="text" id="user" required/>
+            <FormLogin onSubmit={(e) => props.sendRequest(e)}>
+                <label htmlFor="login">Login</label>
+                <input type="text" id="login" required onChange={(e) => props.setLogin(e.target.value)}/>
 
                 <label htmlFor="password">Password</label>
-                <input type="password" id="password" required/>
+                <input type="password" id="password" required onChange={(e) => props.setPassword(e.target.value)}/>
 
                 <PersonalizedButton text='Login'/>
             </FormLogin>
