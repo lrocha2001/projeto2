@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const Country = require('../models/Country');
+const mongoSanitize = require('express-mongo-sanitize');
 
 //Private Route
 
@@ -27,8 +28,18 @@ function checkToken(req, res, next) {
 
 //Add Country
 
-router.post('/', checkToken, async (req, res) => {
+router.post('/', checkToken, mongoSanitize(), async (req, res) => {
   const { countryName, language, region } = req.body;
+
+  // Check if values contain special characters
+const hasInvalidChars = [countryName, language, region].some(
+  value => /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(value)
+);  
+
+  if (hasInvalidChars) {
+    return res.status(400).json({ message: "Invalid characters in input" });
+  }
+
   const countryExists = await Country.findOne({countryName: countryName});    
 
   try {
@@ -66,15 +77,21 @@ router.post('/', checkToken, async (req, res) => {
 
 //Search Countries
 
-router.get("/:region", checkToken, async (req, res) => {
-  const region = req.params.region;
+router.get("/:region", checkToken, mongoSanitize(), async (req, res) => {
+  let region = req.params.region;
+
+  // Check if region contains special characters
+  const hasInvalidChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(region);
+
+  if (hasInvalidChars) {
+    return res.status(400).json({ message: "Invalid characters in input" });
+  }
 
   // make it case-insensitive
   const regex = new RegExp(region, "i");
 
   // Consulta usando a expressão regular
   const countries = await Country.find({ region: regex });
-
 
   res.status(200).json({ countries });
 });
