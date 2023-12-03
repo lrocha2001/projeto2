@@ -3,9 +3,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-// Import user routes module
+// Import routes module
 const userRoutes = require('./routes/userRoutes');
-// Import country routes module
+
+// Import routes module
 const countryRoutes = require('./routes/countryRoutes');
 
 const app = express();
@@ -26,7 +27,7 @@ mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.xfqdxjl.mongodb
 
 
 // Use the user routes module
-app.use('/user', userRoutes);
+app.use('/', userRoutes);
 
 // Use the user routes module
 app.use('/country', countryRoutes);
