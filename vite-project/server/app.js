@@ -1,13 +1,14 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 // Import user routes module
 const userRoutes = require('./routes/userRoutes');
+// Import country routes module
+const countryRoutes = require('./routes/countryRoutes');
 
 const app = express();
-
 app.use(express.json());
 app.use(cors());
 
@@ -23,8 +24,14 @@ mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.xfqdxjl.mongodb
         console.log('Error Database Connection: ' + error);
     });
 
+
 // Use the user routes module
 app.use('/user', userRoutes);
+
+// Use the user routes module
+app.use('/country', countryRoutes);
+
+// Public Route
 
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'It works'});
