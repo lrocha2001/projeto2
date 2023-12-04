@@ -27,7 +27,7 @@ function Header() {
         <HeaderContainer>
             <Logo />
             <LinksContainer>
-                <StylizedLink to='/login'>Login</StylizedLink>
+                <StylizedLink to='/'>Login</StylizedLink>
                 <StylizedLink to='/country'>Add Countries</StylizedLink>
             </LinksContainer>
         </HeaderContainer>

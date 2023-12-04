@@ -9,9 +9,9 @@ function App() {
     <BrowserRouter>
       <Global />
       <Routes>
-        <Route path='/' element={<Home />}/>
-        <Route path='/login' element={<Login />}/>
-        <Route path='/Country' element={<Country />}/>
+        <Route path='/' element={<Login />}/>
+        <Route path='/home' element={<Home />}/>
+        <Route path='/country' element={<Country />}/>
       </Routes>
     </BrowserRouter>
   )

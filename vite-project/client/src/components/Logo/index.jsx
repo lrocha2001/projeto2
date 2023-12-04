@@ -7,7 +7,7 @@ const StylizedLink = styled(Link)`
 
 function Logo() {
     return(
-        <StylizedLink to='/'>InfoCountries</StylizedLink>
+        <StylizedLink to='/home'>InfoCountries</StylizedLink>
     )
 }
 

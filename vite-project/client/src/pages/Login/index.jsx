@@ -35,7 +35,7 @@ function Login() {
 
             const data = await response.json();
             localStorage.setItem('token', data.token);
-            navigate('/');
+            navigate('/home');
         } catch (error) {
             console.log(error);
         }
