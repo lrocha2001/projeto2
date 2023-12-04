@@ -4,7 +4,32 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const Country = require('../models/Country');
 const mongoSanitize = require('express-mongo-sanitize');
+const cache = require('express-redis-cache')({
+  prefix: 'infocountries',
+  host: process.env.REDIS_URL,
+  port: 15685,
+  auth_pass: process.env.REDIS_PASSWORD
+});
 
+cache.on('connected', () => {
+  console.log('Redis connection');
+});
+
+cache.on('error', (error) => {
+  console.error('Erro ao conectar ao Redis:', error);
+});
+
+cache.invalidate = (name) => {
+  return (req, res, next) => {
+    const route_name = name ? name : req.url;
+    if (!cache.connected) {
+      next();
+      return ;
+    }
+    cache.del(route_name, (err) => console.log(err));
+    next();
+  };
+};
 //Private Route
 
 function checkToken(req, res, next) {
@@ -28,7 +53,7 @@ function checkToken(req, res, next) {
 
 //Add Country
 
-router.post('/', checkToken, mongoSanitize(), async (req, res) => {
+router.post('/', checkToken, mongoSanitize(), cache.invalidate(), async (req, res) => {
   const { countryName, language, region } = req.body;
 
   // Check if values contain special characters
@@ -77,7 +102,7 @@ const hasInvalidChars = [countryName, language, region].some(
 
 //Search Countries
 
-router.get("/:region", checkToken, mongoSanitize(), async (req, res) => {
+router.get("/:region", checkToken, mongoSanitize(), cache.route(), async (req, res) => {
   let region = req.params.region;
 
   // Check if region contains special characters
