@@ -25,10 +25,10 @@ const StylizedButton = styled.button`
     right: 450px;
 `
 
-function Search() {
+function Search(props) {
     return (
-        <StylizedForm>
-            <StylizedInput placeholder="Search for Region (e.g., Europe)" />
+        <StylizedForm onSubmit={(e) => props.sendRequest(e)}>
+            <StylizedInput placeholder="Search for Region (e.g., Europe)" onChange={(e) => props.setSearch(e.target.value)} />
             <StylizedButton type="submit"><FaSistrix style={{color: '#FFF', fontSize: '22px'}}/></StylizedButton>
         </StylizedForm>
     )

@@ -15,6 +15,7 @@ const StylizedCountry = styled.div`
 
 const Title = styled.h2`
     font-weight: 500;
+    color: #ACACAC;
 `
 
 const Region = styled.p`
@@ -23,16 +24,17 @@ const Region = styled.p`
     line-height: 24px;
 `
 
-const Currency = styled.h4`
-
+const Language = styled.h4`
+    width: 20%;
+    color: #ACACAC;
 `
 
-function Country() {
+function Country(props) {
     return(
         <StylizedCountry>
-            <Title>Germany</Title>
-            <Currency>EUR</Currency>
-            <Region>Europe</Region>
+            <Title>{props.countryName}</Title>
+            <Language>{props.language}</Language>
+            <Region>{props.region}</Region>
         </StylizedCountry>
     )
 }
