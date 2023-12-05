@@ -75,16 +75,16 @@ const hasInvalidChars = [countryName, language, region].some(
   try {
       // validations
 
-      if (!countryName) {
-          return res.status(422).json({ message: "countryName is mandatory"});
+      if (!countryName || countryName.length < 4) {
+          return res.status(422).json({ message: "countryName is mandatory and length must be greater than 3"});
       }
 
       if (!language) {
           return res.status(422).json({ message: "language is mandatory"});
       }
 
-      if (!region) {
-          return res.status(422).json({ message: "region is mandatory"});
+      if (!region || region.length < 4) {
+          return res.status(422).json({ message: "region is mandatory and length must be greater than 3"});
           }
 
       if (countryExists) {
@@ -110,6 +110,12 @@ const hasInvalidChars = [countryName, language, region].some(
 
 router.get("/:region", checkToken, mongoSanitize(), cache.route(), async (req, res) => {
   let region = req.params.region;
+
+  if (!region || region.length < 3) {
+    let error = res.status(422).json({ message: "region length must be greater than 3"});
+    logger.error(error);
+    return error;
+  }
 
   // Check if region contains special characters
   const hasInvalidChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(region);
