@@ -18,7 +18,7 @@ function Login() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:3000/authenticate', {
+            const response = await fetch('https://localhost:3000/authenticate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

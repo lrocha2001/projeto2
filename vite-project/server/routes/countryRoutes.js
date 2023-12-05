@@ -4,6 +4,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const Country = require('../models/Country');
 const mongoSanitize = require('express-mongo-sanitize');
+const logger = require('../logger');
 const cache = require('express-redis-cache')({
   prefix: 'infocountries',
   host: process.env.REDIS_URL,
@@ -37,7 +38,9 @@ function checkToken(req, res, next) {
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token){
-    return res.status(401).json({ message: "Unauthorized" });
+    let error = res.status(401).json({ message: "Unauthorized" });
+    logger.error(error);
+    return error;
   }
 
   try {
@@ -46,7 +49,8 @@ function checkToken(req, res, next) {
     jwt.verify(token, secret);
 
     next();
-  } catch (err) {
+  } catch (error) {
+    logger.error(error);
     res.status(400).json({ message: "Invalid authorization token"});
   }
 }
@@ -62,7 +66,9 @@ const hasInvalidChars = [countryName, language, region].some(
 );  
 
   if (hasInvalidChars) {
-    return res.status(400).json({ message: "Invalid characters in input" });
+    error = res.status(400).json({ message: "Invalid characters in input" });
+    logger.error(error)
+    return error;
   }
 
   const countryExists = await Country.findOne({countryName: countryName});    
@@ -96,6 +102,7 @@ const hasInvalidChars = [countryName, language, region].some(
     res.status(201).json({ message: "Country created successfully" });
 
   } catch (error) {
+      logger.error(error);
       res.status(500).json({ message: error.message });
   }
 });
@@ -109,7 +116,10 @@ router.get("/:region", checkToken, mongoSanitize(), cache.route(), async (req, r
   const hasInvalidChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(region);
 
   if (hasInvalidChars) {
-    return res.status(400).json({ message: "Invalid characters in input" });
+    let error = res.status(400).json({ message: "Invalid characters in input" });
+    logger.error(error)
+    return error;
+    
   }
 
   // make it case-insensitive

@@ -45,7 +45,7 @@ function Country() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3000/country', {
+            const response = await fetch('https://localhost:3000/country', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
