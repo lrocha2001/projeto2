@@ -31,7 +31,6 @@ cache.invalidate = (name) => {
     next();
   };
 };
-//Private Route
 
 function checkToken(req, res, next) {
   const authHeader = req.headers["authorization"];
@@ -117,7 +116,7 @@ router.get("/:region", checkToken, mongoSanitize(), cache.route(), async (req, r
 
   if (hasInvalidChars) {
     let error = res.status(400).json({ message: "Invalid characters in input" });
-    logger.error(error)
+    logger.error(error);
     return error;
     
   }
