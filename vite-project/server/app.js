@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const https = require('https'); // Adicionado
+const fs = require('fs'); // Adicionado
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -29,7 +31,6 @@ mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.xfqdxjl.mongodb
         console.log('Error Database Connection: ' + error);
     });
 
-
 // Use the user routes module
 app.use('/', userRoutes);
 
@@ -37,11 +38,19 @@ app.use('/', userRoutes);
 app.use('/country', countryRoutes);
 
 // Public Route
-
 app.get('/', (req, res) => {
-    res.status(200).json({ message: 'It works'});
+    res.status(200).json({ message: 'It works' });
 });
 
-app.listen(3000, () => {
-    console.log(`Server is running on port 3000`);
+// Configuração para o servidor HTTPS
+const httpsOptions = {
+    key: fs.readFileSync('private-key.pem'),
+    cert: fs.readFileSync('cert.pem')
+};
+// Cria o servidor HTTPS
+const server = https.createServer(httpsOptions, app);
+
+// Inicia o servidor na porta 3000
+server.listen(3000, () => {
+    console.log(`Server is running on port 3000 (HTTPS)`);
 });
